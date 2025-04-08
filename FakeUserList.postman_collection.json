@@ -1,0 +1,659 @@
+{
+	"info": {
+		"_postman_id": "2c5e77fa-c61a-4964-9f07-dc2bcaa6a724",
+		"name": "Fake user  list",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41577760",
+		"_collection_link": "https://speeding-shadow-706592.postman.co/workspace/b9329ae0-1e9f-42e2-aa78-8841f1f28288/collection/41577760-2c5e77fa-c61a-4964-9f07-dc2bcaa6a724?action=share&source=collection_link&creator=41577760"
+	},
+	"item": [
+		{
+			"name": "Get first page",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const myPackage = pm.require('@speeding-shadow-706592/reusables')\r",
+							"\r",
+							"//randomly picks one id\r",
+							"const response = pm.response.json();\r",
+							"const min = 1;\r",
+							"const max = response['data'].length;\r",
+							"//console.log(max);\r",
+							"const pickedId = myPackage.randomNumber(min,max);\r",
+							"pm.collectionVariables.set(\"id\", pickedId);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Statust text should be 'OK'\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain Content-Type header\", ()=>{\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header should have value 'application/json'\", ()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {
+							"@speeding-shadow-706592/reusables": {
+								"id": "01961510-9375-7fc8-a625-f9c064ed8984"
+							}
+						}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users?page=1&per_page=10",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "per_page",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 200\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Statust text should be 'OK'\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain Content-Type header\", ()=>{\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header should have value 'application/json'\", ()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response body contains the expected data types\", () => {\r",
+							"    pm.expect(response).to.be.an(\"object\");\r",
+							"    pm.expect(response['data']).to.be.an(\"object\");\r",
+							"    pm.expect(response['data']['id']).to.be.a(\"number\");\r",
+							"    pm.expect(response['data']['email']).to.be.a(\"string\");\r",
+							"    pm.expect(response['data']['first_name']).to.be.a(\"string\");\r",
+							"    pm.expect(response['data']['last_name']).to.be.a(\"string\");\r",
+							"    pm.expect(response['data']['avatar']).to.be.a(\"string\");\r",
+							"    pm.expect(response['support']).to.be.an(\"object\");\r",
+							"    pm.expect(response['support']['url']).to.be.a(\"string\");\r",
+							"    pm.expect(response['support']['text']).to.be.a(\"string\");\r",
+							"    });\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"The response should have status 201\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should have status 'Created'\", ()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('Created');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain Content-Type header\", ()=>{\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header should have value 'application/json'\", ()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							"\r",
+							"//randomly picks one id\r",
+							"const response = pm.response.json();\r",
+							"const userId = response['id'];\r",
+							"pm.collectionVariables.set(\"id\", userId);\r",
+							"pm.collectionVariables.set(\"name\", response['name']);\r",
+							"pm.collectionVariables.set(\"job\", response['job']);\r",
+							"pm.collectionVariables.set(\"creationDate\", response['createdAt']);\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code should be 201\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Statust text should be 'Created'\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('Created');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\",\r\n    \"job\": \"{{$randomJobTitle}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const reusables = pm.require('@speeding-shadow-706592/reusables');\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status text should be 'OK'\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain Content-Type header\", ()=>{\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header should have value 'application/json'\", ()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"const name = pm.collectionVariables.get('name');\r",
+							"const job = pm.collectionVariables.get('job');\r",
+							"const newName = response['name'];\r",
+							"const newJob = response['job'];\r",
+							"\r",
+							"\r",
+							"pm.test(\"Name should be updated\",()=>{\r",
+							"    pm.expect(name).not.to.eql(newName);\r",
+							"}); \r",
+							"\r",
+							"pm.test(\"Job should be updated\",()=>{\r",
+							"    pm.expect(job).not.to.eql(newJob);\r",
+							"}); \r",
+							"\r",
+							"//Resets the name and job variables with the current values\r",
+							"pm.collectionVariables.set(\"name\", response['name']);\r",
+							"pm.collectionVariables.set(\"job\", response['job']);"
+						],
+						"type": "text/javascript",
+						"packages": {
+							"@speeding-shadow-706592/reusables": {
+								"id": "01961510-9375-7fc8-a625-f9c064ed8984"
+							}
+						}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\",\r\n    \"job\": \"{{$randomJobTitle}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit user name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const reusables = pm.require('@speeding-shadow-706592/reusables');\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status text should be 'OK'\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain Content-Type header\", ()=>{\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header should have value 'application/json'\", ()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"//defines variables;\r",
+							"const name = pm.collectionVariables.get('name');\r",
+							"const response = pm.response.json();\r",
+							"const newName = response['name'];\r",
+							"\r",
+							"pm.test(\"Name should be updated\", ()=>{\r",
+							"    pm.expect(newName).not.to.eql(name);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {
+							"@speeding-shadow-706592/reusables": {
+								"id": "01961510-9375-7fc8-a625-f9c064ed8984"
+							}
+						}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{$randomFirstName}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit user job",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 200\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Statust text should be 'OK'\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('OK');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain Content-Type header\", ()=>{\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type header should have value 'application/json'\", ()=>{\r",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"const job = pm.collectionVariables.get('job');\r",
+							"const response = pm.response.json();\r",
+							"const newJob = response['job'];\r",
+							"\r",
+							"pm.test(\"Job should be updated\", ()=>{\r",
+							"    pm.expect(newJob).not.to.eql(job);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"job\": \"{{$randomJobTitle}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const reusables = pm.require('@speeding-shadow-706592/reusables');\r",
+							"\r",
+							"pm.test(\"Status code should be 204\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(204);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status text should be 'No Content'\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('No Content');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {
+							"@speeding-shadow-706592/reusables": {
+								"id": "01961510-9375-7fc8-a625-f9c064ed8984"
+							}
+						}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code should be 404\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status text should be 'Not Found'\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql('Not Found');\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/:id",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {
+					"@speeding-shadow-706592/reusables": {
+						"id": "01961510-9375-7fc8-a625-f9c064ed8984"
+					}
+				},
+				"exec": [
+					"const reusables = pm.require('@speeding-shadow-706592/reusables');\r",
+					"\r",
+					"pm.test(\"Response time is below 200\",()=>{\r",
+					"    pm.expect(pm.response.responseTime).to.be.below(400);\r",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://reqres.in/api",
+			"type": "default"
+		},
+		{
+			"key": "id",
+			"value": ""
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "job",
+			"value": ""
+		},
+		{
+			"key": "creationDate",
+			"value": ""
+		}
+	]
+}
